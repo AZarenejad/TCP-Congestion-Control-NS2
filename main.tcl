@@ -9,7 +9,7 @@ set variant [lindex $argv 0]
 #Open the nam file basic.nam and the variable-trace file basic.tr
 set namfile [open main.nam w]
 $ns namtrace-all $namfile
-set tracefile [open main.tr w]
+set tracefile [open Tahoe/droprate/tracefiles/10.tr w]
 $ns trace-all $tracefile
 
 
@@ -221,3 +221,17 @@ proc calcRtt {tcpSource outfile time} {
 
 # Run simulation !!!!
 $ns run
+
+
+
+
+
+
+
+
+
+
+
+
+
+
