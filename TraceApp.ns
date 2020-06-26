@@ -1,10 +1,8 @@
 Class TraceApp -superclass Application
-
 TraceApp instproc init {args} {
         $self set bytes_ 0
         eval $self next $args
 }
-
 TraceApp instproc recv {byte} {
         $self instvar bytes_
         set bytes_ [expr $bytes_ + $byte]
