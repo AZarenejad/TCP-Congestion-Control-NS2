@@ -3,13 +3,15 @@ set ns [new Simulator]
 
 #set TCP variant from commandline
 set variant [lindex $argv 0]
-
+set num_run [lindex $argv 1]
 
 
 #Open the nam file basic.nam and the variable-trace file basic.tr
 set namfile [open main.nam w]
 $ns namtrace-all $namfile
-set tracefile [open Tahoe/droprate/tracefiles/10.tr w]
+set filetrace "$variant/droprate/tracefiles/$num_run.tr"
+puts $filetrace
+set tracefile [open $filetrace w]
 $ns trace-all $tracefile
 
 
@@ -139,28 +141,23 @@ proc plotWindow {tcpSource outfile} {
 }
 
 
-if {$variant == "Tahoe"} {
-	set outfile0 [open  "Tahoe/cwnd/flow0/10.txt"  w]
-    set outfile1 [open  "Tahoe/cwnd/flow1/10.txt"  w]
-    set trace_file0 [open  "Tahoe/goodput/flow0/10.txt"  w]
-    set trace_file1 [open  "Tahoe/goodput/flow1/10.txt"  w]
-    set out0 [open  "Tahoe/rtt/flow0/10.txt"  w]
-    set out1 [open  "Tahoe/rtt/flow1/10.txt"  w]
-} elseif {$variant == "Newreno"} {
-	set outfile0 [open  "Newreno/cwnd/flow0/10.txt"  w]
-    set outfile1 [open  "Newreno/cwnd/flow1/10.txt"  w]
-    set trace_file0 [open  "Newreno/goodput/flow0/10.txt"  w]
-    set trace_file1 [open  "Newreno/goodput/flow1/10.txt"  w]
-    set out0 [open  "Newreno/rtt/flow0/10.txt"  w]
-    set out1 [open  "Newreno/rtt/flow1/10.txt"  w]
-} elseif {$variant == "Vegas"} {
-	set outfile0 [open  "Vegas/cwnd/flow0/10.txt"  w]
-    set outfile1 [open  "Vegas/cwnd/flow1/10.txt"  w]
-    set trace_file0 [open  "Vegas/goodput/flow0/10.txt"  w]
-    set trace_file1 [open  "Vegas/goodput/flow1/10.txt"  w]
-    set out0 [open  "Vegas/rtt/flow0/10.txt"  w]
-    set out1 [open  "Vegas/rtt/flow1/10.txt"  w]
-}
+
+
+set file_cwnd0 "$variant/cwnd/flow0/$num_run.txt"
+set file_goodput0 "$variant/goodput/flow0/$num_run.txt"
+set file_rtt0 "$variant/rtt/flow0/$num_run.txt"
+set file_cwnd1 "$variant/cwnd/flow1/$num_run.txt"
+set file_goodput1 "$variant/goodput/flow1/$num_run.txt"
+set file_rtt1 "$variant/rtt/flow1/$num_run.txt"
+
+set outfile0 [open  $file_cwnd0  w]
+set outfile1 [open  $file_cwnd1  w]
+set trace_file0 [open  $file_goodput0  w]
+set trace_file1 [open  $file_goodput1  w]
+set out0 [open  $file_rtt0  w]
+set out1 [open  $file_rtt1  w]
+
+
 
 $ns  at  0.0  "plotWindow $tcp0  $outfile0"
 $ns  at  0.0  "plotWindow $tcp1  $outfile1"
@@ -208,7 +205,7 @@ $ns  at  0.0  "plotThroughput $traceapp1  $trace_file1"
 
 ################## CAlC RTT #########################
 
-for {set  i 0} { $i < 1000} {incr i} {
+for {set  i 0} { $i < 1000} {set i [expr {$i + 1}]} {
         $ns at $i "calcRtt $tcp0  $out0 $i"
         $ns at $i "calcRtt $tcp1  $out1  $i"
 }
